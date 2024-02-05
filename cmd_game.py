@@ -107,7 +107,7 @@ def enemy_turn():
                         return
                     elif answer == "no" and correct_answer == 0:
                         print(f"{bot.name}: Okay. Your turn.")
-                        draw_cards(deck, bot, 1)
+                        draw_cards(card_deck, bot, 1)
                         if sum(1 for card in player.hand if Card.value[card.value] == Card.value[player.hand[-1]]) == 4:
                             player.chest_number += 1
                             player.hand = [card for card in player.hand if not Card.value[card.value] == Card.value[player.hand[-1]]]
@@ -158,6 +158,7 @@ class Player:
             print(f"Карта: {Card.value[card.value]} {Card.suit[card.suit]}")
 
 def guess_card(guesser, guessed):
+    #добавить запрет на запрос карт, которых нет в руке
     g_value = input("(value)Do you have ")
     if not any(Card.value[card.value] == g_value for card in guessed.hand):
        print(f"{bot.name}: No. My turn.")
