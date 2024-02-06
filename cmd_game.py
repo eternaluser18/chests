@@ -1,5 +1,5 @@
 import random
-import sys
+import math
 
 def start_game():
     global card_deck
@@ -31,11 +31,34 @@ def start_game():
         else:
             enemy_turn()
         turn_number += 1
+def end_game():
 
+    if bot.chest_number > player.chest_number:
+        print("The game has ended")
+        print(f"{bot.name} wins. Say your last words.")
+        input()
+        exit()
+    elif bot.chest_number < player.chest_number:
+        print("The game has ended")
+        print(f"{player.name} wins.Congratulations. Say your last words.")
+        input()
+        exit()
+    else:
+        print("Game isn't finished yet.")
+def check_chests(player, last_n):
+    for card_i in range(last_n):
+        if sum(1 for card in bot.hand if Card.value[card.value] == Card.value[player.hand[-1*(card_i+1)].value]) == 4:
+            bot.chest_number += 1
+            bot.hand = [card for card in player.hand if not Card.value[card.value] == Card.value[player.hand[-1*(card_i+1)]]]
+            card_i -= 1
 def player_turn():
     while(1):
         line = input(f"{player.name}: ")
         if line == "hand": player.show_hand()
+        elif line == "cheat":
+            bot.show_hand()
+        elif line == "end":
+            end_game()
         elif line == "guess":
             guess_card(player, bot)
             break
@@ -92,25 +115,34 @@ def enemy_turn():
                         break
                     elif answer == "no" and correct_answer == 1:
                         print(f"{bot.name}: LIAR!")
-                        for i in range(len((player.hand) / 2)):
+                        temp2 = math.ceil(len(player.hand) / 2)
+                        for i in range(temp2):
+
                             steal_cards(bot, player, Card.value[player.hand[0]])
-                            #доделать проверку на сундучки
-                        print(f"Half of your cards goes to {bot.name}")
+
+                        print(f"More then half of your cards goes to {bot.name}")
+                        check_chests(bot, temp2)
+                        if player.chest_number + bot.chest_number == 13:
+                            end_game()
                         return
                     elif answer == "yes" and correct_answer == 0:
                         print(f"{bot.name}: You lied.")
                         steal_cards(bot, player, Card.value[player.hand[0].value])
                         print(f"One of your cards goes to {bot.name}")
-                        if sum(1 for card in bot.hand if Card.value[card.value] == Card.value[bot.hand[-1]]) == 4:
+                        if sum(1 for card in bot.hand if Card.value[card.value] == Card.value[bot.hand[-1].value]) == 4:
                             bot.chest_number += 1
                             bot.hand = [card for card in bot.hand if not Card.value[card.value] == Card.value[bot.hand[-1]]]
+                            if player.chest_number + bot.chest_number == 13:
+                                end_game()
                         return
                     elif answer == "no" and correct_answer == 0:
                         print(f"{bot.name}: Okay. Your turn.")
                         draw_cards(card_deck, bot, 1)
-                        if sum(1 for card in player.hand if Card.value[card.value] == Card.value[player.hand[-1]]) == 4:
+                        if sum(1 for card in player.hand if Card.value[card.value] == Card.value[player.hand[-1].value]) == 4:
                             player.chest_number += 1
                             player.hand = [card for card in player.hand if not Card.value[card.value] == Card.value[player.hand[-1]]]
+                            if player.chest_number + bot.chest_number == 13:
+                                end_game()
                         return
                     else:
                         print(f"{bot.name}: I didn't understand ypu. Try again.")
@@ -152,14 +184,18 @@ class Player:
 
     def show_hand(self):
         print(len(bot.hand))
-        print(f"{self.name}'s рука карт:")
+        print(f"{self.name}'s hand:")
 
         for card in self.hand:
-            print(f"Карта: {Card.value[card.value]} {Card.suit[card.suit]}")
+            print(f"{Card.value[card.value]} {Card.suit[card.suit]}")
 
 def guess_card(guesser, guessed):
-    #добавить запрет на запрос карт, которых нет в руке
+
     g_value = input("(value)Do you have ")
+
+    if not any(Card.value[card.value] == g_value for card in guesser.hand):
+        print(f"You break the rule, so now is my turn.")
+        return
     if not any(Card.value[card.value] == g_value for card in guessed.hand):
        print(f"{bot.name}: No. My turn.")
        draw_cards(card_deck, player, 1)
@@ -169,12 +205,14 @@ def guess_card(guesser, guessed):
     g_amount = int(input("in amount of "))
 
     if not g_amount == sum(1 for card in guessed.hand if Card.value[card.value] == g_value):
-        print(f"nah, {sum(1 for card in guessed.hand if Card.value[card.value] == g_value)}")
+        print(f"{bot.name}: Nah, my turn")
         draw_cards(card_deck, player, 1)
         print(f"You took a {Card.value[player.hand[-1].value]} of {Card.suit[player.hand[-1].suit]}")
-        if sum(1 for card in player.hand if Card.value[card.value] == Card.value[player.hand[-1]]) == 4:
+        if sum(1 for card in player.hand if Card.value[card.value] == Card.value[player.hand[-1].value]) == 4:
             player.chest_number += 1
             player.hand = [card for card in player.hand if not Card.value[card.value] == Card.value[player.hand[-1]]]
+            if player.chest_number + bot.chest_number == 13:
+                end_game()
         return
     if g_amount == 3:
         print("take it all")
@@ -191,9 +229,11 @@ def guess_card(guesser, guessed):
             print(f"{bot.name}: No. My turn.")
             draw_cards(card_deck, player, 1)
             print(f"You took a {Card.value[player.hand[-1].value]} of {Card.suit[player.hand[-1].suit]}")
-            if sum(1 for card in player.hand if Card.value[card.value] == Card.value[player.hand[-1]]) == 4:
+            if sum(1 for card in player.hand if Card.value[card.value] == Card.value[player.hand[-1].value]) == 4:
                 player.chest_number += 1
                 player.hand = [card for card in player.hand if not Card.value[card.value] == Card.value[player.hand[-1]]]
+                if player.chest_number + bot.chest_number == 13:
+                    end_game()
             return
         if temp == len(temp_card_list):
             print("okay, take it")
@@ -201,6 +241,8 @@ def guess_card(guesser, guessed):
             if sum(1 for card in player.hand if Card.value[card.value] == g_value) == 4:
                 player.chest_number += 1
                 player.hand = [card for card in player.hand if not Card.value[card.value] == g_value]
+                if player.chest_number + bot.chest_number == 13:
+                    end_game()
         else:
             print("okay, next")
 
