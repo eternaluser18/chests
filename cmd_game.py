@@ -10,8 +10,6 @@ def start_game():
             card_deck.append(Card(v=y, s=x))
     random.shuffle(card_deck)
 
-    for card in card_deck:
-        print(f"{Card.value[card.value]} of {Card.suit[card.suit]}")
     print("\n")
     name = input("Your name: ")
     global bot
@@ -94,7 +92,7 @@ def enemy_turn():
             break
         elif answer == "no" and correct_answer == 1:
             print(f"{bot.name}: LIAR!")
-            for i in range(len((player.hand) / 2)):
+            for i in range(math.ceil(len(player.hand) / 2)):
                 steal_cards(bot, player, Card.value[player.hand[0]])
             print(f"Half of your cards goes to {bot.name}")
             return
@@ -118,7 +116,7 @@ def enemy_turn():
                 print(f"{bot.name}: And last card. {Card.value[v.value]} of {temp_suit_of_v.pop()}")
             else:
                 temp1 = temp_suit_of_v.pop()
-                print(f"{bot.name}: One of suits is {temp1}?")
+                print(f"{bot.name}: One of suits is {Card.suit[temp1]}?")
                 correct_answer = any(Card.suit[card.suit] == 1 and Card.value[card.value] == v for card in player.hand)
                 while (1):
                     answer = input(f"{player.name}: ")
@@ -207,7 +205,9 @@ class Player:
 
 def guess_card(guesser, guessed):
     g_value = input("(value)Do you have ")
-
+    g_value = g_value.lower()
+    g_value = g_value.capitalize()
+    print(g_value)
     if not any(Card.value[card.value] == g_value for card in guesser.hand):
         print(f"You break the rule, so now is my turn.")
         return
@@ -231,12 +231,12 @@ def guess_card(guesser, guessed):
         return
     if g_amount == 3:
         print("take it all")
+        steal_cards(player, bot, g_value)
         return
     temp_card_list = [card for card in guessed.hand if Card.value[card.value] == g_value]
 
-    for i in temp_card_list:
-        print(f"{Card.value[i.value]} of {Card.suit[i.suit]}")
-        temp = 0
+
+    temp = 0
     for i in temp_card_list:
         temp += 1
         x = input(f"{temp}/{len(temp_card_list)} suit is ")

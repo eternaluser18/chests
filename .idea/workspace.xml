@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="dd76d1f1-a337-438d-bcb8-719f6047c79f" name="Changes" comment="created cmd version">
+    <list default="true" id="dd76d1f1-a337-438d-bcb8-719f6047c79f" name="Changes" comment="updated cmd version">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmd_game.py" beforeDir="false" afterPath="$PROJECT_DIR$/cmd_game.py" afterDir="false" />
     </list>
@@ -92,12 +92,29 @@
       <option name="project" value="LOCAL" />
       <updated>1707147734387</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="updated cmd version">
+      <option name="closed" value="true" />
+      <created>1707228592019</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1707228592019</updated>
+    </task>
+    <task id="LOCAL-00005" summary="updated cmd version">
+      <option name="closed" value="true" />
+      <created>1707228710967</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1707228710967</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="created logic, but no graphic" />
     <MESSAGE value="created cmd version" />
-    <option name="LAST_COMMIT_MESSAGE" value="created cmd version" />
+    <MESSAGE value="updated cmd version" />
+    <option name="LAST_COMMIT_MESSAGE" value="updated cmd version" />
   </component>
 </project>
